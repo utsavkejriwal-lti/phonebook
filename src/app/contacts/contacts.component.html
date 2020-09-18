@@ -1,0 +1,76 @@
+<div class="px-3">
+    <div class="row align-items-center justify-content-between">
+        <div class="col"><h4>Contacts</h4></div>
+        <div class="col text-right">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addContactModal">
+             + Add Contact
+            </button>
+        </div>
+    </div>
+    <div class="input-group input-group-sm my-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-sm"><i class="fa fa-search"></i></span>
+        </div>
+        <input type="text" class="form-control" placeholder="Search for contact" [(ngModel)] = "searchString">
+    </div>
+    <div class="input-group mb-3 input-group-sm" style="width: 14rem;">
+        <div class="input-group-prepend">
+          <label class="input-group-text" for="inputGroupSelect01">Sort By</label>
+        </div>
+        <select class="custom-select" id="inputGroupSelect01" [(ngModel)]="selectOption" (change)="updateSort()">
+          
+          <option value="1">By First Name | Asc</option>
+          <option value="2">By First Name | Desc</option>
+          <option value="3">By Last Name | Asc</option>
+          <option value="4">By Last Name | Desc</option>
+          <option value="5">By Number | Asc</option>
+          <option value="6">By Number | Desc</option>
+        </select>
+      </div>
+      
+    <div class="card" *ngIf="contacts.length > 0">
+        <div class="list-group list-group-flush" *ngFor="let c of contacts| contactFilter : searchString | orderBy : sortByProp : sortOrder">
+          <app-contact *ngIf="c" [contact]="c" (updateCont)="updateContacts()"></app-contact>          
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="modal fade" id="addContactModal" tabindex="-1" aria-labelledby="addContactModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+          
+        <div class="modal-header">
+          <h5 class="modal-title" id="addContactModalLabel">New Contact</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="addContactForm" (ngSubmit)="addRequest()">
+                <input type="text" class="form-control my-2"  placeholder="First Name" formControlName="firstname">
+                <span class="text-danger" *ngIf="firstnameg.errors && firstnameg.touched">
+                    First Name should have more than 3 characters
+                </span>
+                <input type="text" class="form-control my-2"  placeholder="Last Name" formControlName="lastname">
+                <span class="text-danger" *ngIf="lastnameg.errors && lastnameg.touched">
+                    Last Name should have more than 3 characters
+                </span>
+                <input type="text" class="form-control my-2"  placeholder="Mobile Number" formControlName="contnumber">
+                <span class="text-danger" *ngIf="contnumberg.errors && contnumberg.touched">
+                    Mobile Number should have 10 digits
+                </span><br>
+                <button  [disabled]="addContactForm.invalid" class="btn btn-primary">Add</button>
+            </form>
+        </div>
+        <div class="modal-footer">
+           
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          
+        </div>
+        
+      </div>
+    </div>
+  </div>
